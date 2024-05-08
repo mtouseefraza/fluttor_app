@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttor_app/config/config.dart';
 import 'package:fluttor_app/utils/validator.dart';
+import 'package:fluttor_app/widget/commonAppBar.dart';
+import 'package:fluttor_app/widget/commonDrawer.dart';
 import 'package:fluttor_app/screens/login.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -44,7 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      appBar:  CommonAppBar(),
+      drawer: CommonDrawer(),
+      //body: Center(child: Loader()),
     );
   }
 }

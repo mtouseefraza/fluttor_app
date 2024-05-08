@@ -31,6 +31,26 @@ class Validator {
     }
   }
 
+  static String? validateConfirmPassword(String value,String value2) {
+    Pattern pattern = r'^.{6,}$';
+    RegExp regex =  RegExp(pattern as String);
+    if (!regex.hasMatch(value)) {
+      return '* Password must be at least 6 characters.';
+    }else if(value != value2){
+      return '* Confirmation password do not match.';
+    } else {
+      return null;
+    }
+  }
+
+  static String? validateMobile(String value) {
+    // Indian Mobile number are of 10 digit only
+    if (value.length != 10)
+      return 'Mobile Number must be of 10 digit';
+    else
+      return null;
+  }
+
   static String? validateName(String value) {
     if (value.length < 3) {
       return '* Username is too short.';
@@ -58,7 +78,7 @@ class Validator {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     dynamic user = prefs.getString('user') ?? '{}';
     user = json.decode(user);
-    if(user['accesstoken']){
+    if(user['token'].isEmpty){
       return true;
     }
     return false;
