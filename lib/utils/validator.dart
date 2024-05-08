@@ -78,7 +78,7 @@ class Validator {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     dynamic user = prefs.getString('user') ?? '{}';
     user = json.decode(user);
-    if(user['accesstoken']){
+    if(user['token'].isEmpty){
       return true;
     }
     return false;
