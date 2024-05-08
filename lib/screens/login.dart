@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttor_app/services/api_client.dart';
 import 'package:fluttor_app/utils/validator.dart';
 import 'package:fluttor_app/screens/home.dart';
+import 'package:fluttor_app/screens/register.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key?key}) : super(key:key);
@@ -19,16 +21,17 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
+  final ApiClient _apiClient = ApiClient();
 
   bool _showPassword = false;
   bool _isRembemerMe = false;
 
 
   Future<void> _loadLoginInfo() async {
-
+  
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isRembemerMe = prefs.getBool('_isRembemerMe') ?? false;
+      _isRembemerMe =  prefs.getBool('_isRembemerMe') ?? false;
       if (_isRembemerMe) {
         email.text = prefs.getString('email') ?? '';
         password.text = prefs.getString('password') ?? '';
@@ -48,24 +51,32 @@ class _LoginScreenState extends State<LoginScreen> {
       await prefs.setBool('_isRembemerMe', _isRembemerMe);
       await prefs.setString('email', '');
       await prefs.setString('password', '');
-      dynamic res = {"ErrorCode":null,"data":{'accesstoken':'735754326tfythgfy','name':'touseef'}};
-      if (res['ErrorCode'] == null && res['data']!=null) {
+      dynamic res = await _apiClient.login(
+        email.text, password.text
+      );
+
+      if (res['status'] == 1 && res['data']!=null) {
         await prefs.setString('user', json.encode(res['data']));
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Login Successful.'),
+          content: Text(res['message']),
           backgroundColor: Colors.green.shade300,
         ));
-        if (res['ErrorCode'] == null) {
-          if (_isRembemerMe) {
-            await prefs.setString('email', email.text);
-            await prefs.setString('password', password.text);
-          }
+        if (_isRembemerMe) {
+          await prefs.setString('email', email.text);
+          await prefs.setString('password', password.text);
         }
         Navigator.push(
             context, MaterialPageRoute(
               builder: (context) => HomeScreen(),
             )
         );
+      }else{
+        if(res['message'].isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(res['message']),
+            backgroundColor: Colors.red.shade300,
+          ));
+        }
       }
     }
   }
@@ -80,7 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _loadLoginInfo();
-    print("=========");
   }
 
 
@@ -129,7 +139,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               isDense: true,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5)
-                              )
+                              ),
+
                             ),
                           ),
                           SizedBox(height: size.height * 0.03),
@@ -219,8 +230,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   textStyle: const TextStyle(fontSize: 14,color: Colors.blueGrey,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),
                                 ),
                                 onPressed: (){
-                                  print('sadasdasdasdasd');
-                                  developer.log("dddd",name:'sssssssss');
+                                  Navigator.push(
+                                      context, MaterialPageRoute(
+                                          builder: (context) => RegistrationScreen(),
+                                    )
+                                  );
                                 },
                                 child: const Text('Registration Now'),
                               ),
