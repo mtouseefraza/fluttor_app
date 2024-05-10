@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttor_app/config/config.dart';
 import 'package:fluttor_app/utils/validator.dart';
 import 'package:fluttor_app/widget/commonAppBar.dart';
 import 'package:fluttor_app/widget/commonDrawer.dart';
@@ -15,8 +14,8 @@ class _HomeScreenState extends State<HomeScreen> {
   //final ApiClient _apiClient = ApiClient();
 
   Future<void> checkLogin() async{
-    var check = Validator.ischeckLogin();
-    if(check == true){
+    var check = await Validator.ischeckLogin();
+    if(check == false){
       Navigator.push(
         context, MaterialPageRoute(
           builder: (context) => LoginScreen(),

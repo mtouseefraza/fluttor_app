@@ -78,9 +78,16 @@ class Validator {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     dynamic user = prefs.getString('user') ?? '{}';
     user = json.decode(user);
-    if(user['token'].isEmpty){
+    if(user.containsKey('token')){
       return true;
     }
     return false;
+  }
+
+  static Future<Map> loginUserData() async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    dynamic user = prefs.getString('user') ?? '{}';
+    user = json.decode(user);
+    return user;
   }
 }

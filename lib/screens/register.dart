@@ -2,7 +2,6 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:fluttor_app/services/api_client.dart';
 import 'package:fluttor_app/utils/validator.dart';
-import 'package:fluttor_app/screens/home.dart';
 import 'package:fluttor_app/screens/login.dart';
 
 class RegistrationScreen extends StatefulWidget {
