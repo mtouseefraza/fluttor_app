@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttor_app/services/api_client.dart';
 import 'package:fluttor_app/utils/validator.dart';
 import 'package:fluttor_app/screens/login.dart';
+import 'package:fluttor_app/screens/home.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key?key}) : super(key:key);
@@ -246,7 +247,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     onPressed: (){
                                       Navigator.push(
                                           context, MaterialPageRoute(
-                                        builder: (context) => LoginScreen(),
+                                        builder: (context) => HomeScreen(),
                                       )
                                       );
                                     },

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttor_app/utils/validator.dart';
 import 'package:fluttor_app/screens/login.dart';
+import 'package:fluttor_app/screens/users.dart';
+import 'package:fluttor_app/screens/home.dart';
 
 class CommonDrawer extends StatefulWidget {
   const CommonDrawer({Key? key}) : super(key: key);
@@ -38,8 +40,6 @@ class _CommonDrawer extends State<CommonDrawer> {
 
   @override
   Widget build(BuildContext context) {
-      print('====');
-      print(user);
      return  Drawer(
        child: (
            ListView(
@@ -53,14 +53,14 @@ class _CommonDrawer extends State<CommonDrawer> {
                    decoration: BoxDecoration(color: Colors.green),
                    margin: EdgeInsets.all(0),
                    accountName: Text(
-                     "Abhishek Mishra",
+                     user?['Name'] ?? '',
                      style: TextStyle(fontSize: 16),
                    ),
-                   accountEmail: Text("abhishekm977@gmail.com"),
+                   accountEmail: Text(user?['Email'] ?? ''),
                    currentAccountPictureSize: Size.square(50),
                    currentAccountPicture: CircleAvatar(
                      backgroundColor: Color.fromRGBO(255, 165, 255, 137),
-                     child: Text('A',style: TextStyle(fontSize: 25,color: Colors.blue)),
+                     child: Text(user?['Name'].substring(0,1).toUpperCase() ?? '',style: TextStyle(fontSize: 25,color: Colors.blue)),
                    ),
                  ),
                ),
@@ -68,7 +68,11 @@ class _CommonDrawer extends State<CommonDrawer> {
                  title: Text('Home'),
                  leading: Icon(Icons.home),
                  onTap: (){
-                   Navigator.pop(context);
+                   Navigator.pushReplacement(
+                       context, MaterialPageRoute(
+                           builder: (context) => const HomeScreen()
+                       )
+                   );
                  },
                ),
                ListTile(
@@ -76,6 +80,17 @@ class _CommonDrawer extends State<CommonDrawer> {
                  leading: Icon(Icons.mail),
                  onTap: (){
                    Navigator.pop(context);
+                 },
+               ),
+               ListTile(
+                 title: Text('User'),
+                 leading: Icon(Icons.people),
+                 onTap: (){
+                   Navigator.pushReplacement(
+                       context, MaterialPageRoute(
+                         builder: (context) => const UsersScreen()
+                     )
+                   );
                  },
                ),
                ListTile(

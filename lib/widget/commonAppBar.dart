@@ -1,12 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:fluttor_app/config/config.dart';
+import 'package:fluttor_app/utils/validator.dart';
+import 'package:fluttor_app/screens/login.dart';
 
-class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CommonAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CommonAppBar({Key? key}) : super(key: key);
 
   static final _appBar = AppBar();
+
   @override
   Size get preferredSize => _appBar.preferredSize;
+  State<CommonAppBar> createState() => _CommonAppBarState();
+}
+class _CommonAppBarState extends State<CommonAppBar> {
+
+  Future<void> checkLogin() async{
+    var check = await Validator.ischeckLogin();
+    if(check == false){
+      Navigator.push(
+          context, MaterialPageRoute(
+        builder: (context) => LoginScreen(),
+      )
+      );
+    }
+  }
+
+  void initState() {
+    super.initState();
+    checkLogin();
+  }
+
 
   @override
   Widget build(BuildContext context) {
