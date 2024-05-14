@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fluttor_app/config/config.dart';
-import 'package:fluttor_app/utils/validator.dart';
 import 'package:fluttor_app/widget/commonAppBar.dart';
 import 'package:fluttor_app/widget/commonDrawer.dart';
-import 'package:fluttor_app/screens/login.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,18 +9,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 class _HomeScreenState extends State<HomeScreen> {
+  int count  =0;
   //final ApiClient _apiClient = ApiClient();
-
-  Future<void> checkLogin() async{
-    var check = Validator.ischeckLogin();
-    if(check == true){
-      Navigator.push(
-        context, MaterialPageRoute(
-          builder: (context) => LoginScreen(),
-        )
-      );
-    }
-  }
 
   /*Future<Map<String, dynamic>> getUserData() async {
     dynamic userRes;
@@ -40,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    checkLogin();
   }
 
   @override
@@ -49,7 +35,23 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar:  CommonAppBar(),
       drawer: CommonDrawer(),
-      //body: Center(child: Loader()),
+      body: RefreshIndicator(
+          onRefresh: () => Future.sync(
+            // Refresh through page controllers
+                () => setState(() {
+                  count = count + 1;
+                })
+          ),
+          child:SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Container(
+              child: Center(
+                child: Text('Hello World ${count}'),
+              ),
+              height: MediaQuery.of(context).size.height,
+            ),
+          ),
+      ),
     );
   }
 }

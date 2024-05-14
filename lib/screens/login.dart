@@ -1,7 +1,6 @@
 //import 'dart:ui';
 import 'dart:core';
 import 'dart:convert';
-import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttor_app/services/api_client.dart';
@@ -48,6 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
       ));
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final now = DateTime.now();
+
       await prefs.setBool('_isRembemerMe', _isRembemerMe);
       await prefs.setString('email', '');
       await prefs.setString('password', '');
@@ -57,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (res['status'] == 1 && res['data']!=null) {
         await prefs.setString('user', json.encode(res['data']));
+        await prefs.setString('user_timestamp', now.toIso8601String());
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(res['message']),
           backgroundColor: Colors.green.shade300,

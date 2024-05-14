@@ -1,6 +1,7 @@
 import 'dart:convert';
+import 'package:fluttor_app/config/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:developer' as developer;
+
 
 class Validator {
   static String? validateEmail(String value) {
@@ -76,11 +77,28 @@ class Validator {
   }
   static Future<bool> ischeckLogin() async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    dynamic user = prefs.getString('user') ?? '{}';
-    user = json.decode(user);
-    if(user['token'].isEmpty){
-      return true;
+    dynamic user = prefs.getString('user');
+    final userTimestamp = prefs.getString('user_timestamp');
+    if (user != null && userTimestamp != null) {
+      final timestamp = DateTime.parse(userTimestamp);
+      final currentTime = DateTime.now();
+      final sessionDuration = currentTime.difference(timestamp);
+      const Duration UserExpirationDuration = Duration(minutes: Config.session_time);
+      user = json.decode(user);
+      if (sessionDuration <= UserExpirationDuration && user.containsKey('token')) {
+        return true;
+      }else{
+        await prefs.remove('user');
+      }
     }
     return false;
   }
+
+  static Future<Map> loginUserData() async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    dynamic user = prefs.getString('user') ?? '{}';
+    user = json.decode(user);
+    return user;
+  }
+
 }

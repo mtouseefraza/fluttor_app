@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'package:fluttor_app/config/config.dart';
+import 'package:fluttor_app/utils/validator.dart';
 
 class ApiClient {
   final Dio _dio = Dio();
@@ -36,6 +37,24 @@ class ApiClient {
     }
   }
 
+  Future<dynamic> postRequest( String url, Map data) async {
+    try {
+      var user = await Validator.loginUserData();
+      var token = user['token'] ?? '';
+      Response response = await _dio.post(
+          '${Config.api}${url}',
+          options: Options(headers: {
+            'content-Type': "application/json",
+            'token': token
+          }),
+          data: jsonEncode(data)
+      );
+      return response.data;
+    } on DioError catch (e) {
+      return e.response!.data;
+    }
+  }
+
   Future<dynamic> registration(Map data) async {
     try {
       Response response = await _dio.post(
@@ -50,4 +69,5 @@ class ApiClient {
       return e.response!.data;
     }
   }
+
 }
